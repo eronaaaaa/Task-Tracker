@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const navItems = [
@@ -20,9 +21,9 @@ export default function Sidebar() {
       padding: '1.5rem 1rem',
       flexShrink: 0
     }}>
-      <p style={{ 
-        fontWeight: 600, 
-        fontSize: '1rem', 
+      <p style={{
+        fontWeight: 600,
+        fontSize: '1rem',
         marginBottom: '1.5rem',
         paddingLeft: '0.5rem'
       }}>
@@ -30,7 +31,7 @@ export default function Sidebar() {
       </p>
       <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
         {navItems.map((item) => (
-          <a
+          <Link
             key={item.href}
             href={item.href}
             style={{
@@ -44,7 +45,7 @@ export default function Sidebar() {
             }}
           >
             {item.label}
-          </a>
+          </Link>
         ))}
       </nav>
     </aside>

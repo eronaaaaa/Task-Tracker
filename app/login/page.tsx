@@ -1,10 +1,12 @@
+import Link from 'next/link'
+
 export default function LoginPage() {
   return (
-    <main style={{ 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      minHeight: '100vh' 
+    <main style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '100vh'
     }}>
       <div style={{
         background: 'white',
@@ -19,8 +21,8 @@ export default function LoginPage() {
         </h1>
 
         <div style={{ marginBottom: '1rem' }}>
-          <label 
-            htmlFor="email" 
+          <label
+            htmlFor="email"
             style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}
           >
             Email
@@ -40,8 +42,8 @@ export default function LoginPage() {
         </div>
 
         <div style={{ marginBottom: '1.5rem' }}>
-          <label 
-            htmlFor="password" 
+          <label
+            htmlFor="password"
             style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}
           >
             Password
@@ -68,10 +70,18 @@ export default function LoginPage() {
           border: 'none',
           borderRadius: '6px',
           fontSize: '1rem',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          marginBottom: '1rem'
         }}>
           Sign in
         </button>
+
+        <p style={{ textAlign: 'center', fontSize: '0.875rem', color: '#6b7280' }}>
+          Don&apos;t have an account?{' '}
+          <Link href="/signup" style={{ color: '#4f46e5', textDecoration: 'none' }}>
+            Sign up
+          </Link>
+        </p>
       </div>
     </main>
   )
