@@ -1,17 +1,21 @@
+import { Box, Typography } from "@mui/material";
+
 type PageHeaderProps = {
-  title: string
-  description?: string
-}
+  title: string;
+  description?: string;
+};
 
 export default function PageHeader({ title, description }: PageHeaderProps) {
   return (
-    <div style={{ marginBottom: '1.5rem' }}>
-      <h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>{title}</h1>
+    <Box>
+      <Typography variant="h5" component="h1">
+        {title}
+      </Typography>
       {description && (
-        <p style={{ color: '#6b7280', marginTop: '0.25rem', fontSize: '0.875rem' }}>
+        <Typography variant="body2" color="text.secondary" mt={0.5}>
           {description}
-        </p>
+        </Typography>
       )}
-    </div>
-  )
+    </Box>
+  );
 }

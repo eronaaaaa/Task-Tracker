@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import MuiProvider from "@/components/MuiProvider";
+import EmotionRegistry from "@/components/EmotionRegistry";
+import { Box } from "@mui/material";
 
 export const metadata: Metadata = {
   title: "Task Tracker",
@@ -15,14 +17,25 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <MuiProvider> 
-          {/* added MuiProvider to prevent hydration warnings */}
-          <div style={{ display: "flex", minHeight: "100vh" }}>
-            <Sidebar />
-            <div style={{ flex: 1 }}>{children}</div>
-          </div>
-        </MuiProvider>
+      <body suppressHydrationWarning>
+        <EmotionRegistry>
+          <MuiProvider>
+            <Box sx={{ display: "flex", minHeight: "100vh" }}>
+              <Sidebar />
+              <Box
+                component="main"
+                sx={{
+                  flexGrow: 1,
+                  bgcolor: "background.default",
+                  minHeight: "100vh",
+                  ml: "220px",
+                }}
+              >
+                {children}
+              </Box>
+            </Box>
+          </MuiProvider>
+        </EmotionRegistry>
       </body>
     </html>
   );

@@ -2,6 +2,18 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import {
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Typography,
+  Divider,
+} from '@mui/material'
+
+const DRAWER_WIDTH = 220
 
 const navItems = [
   { label: 'Home', href: '/' },
@@ -13,41 +25,58 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside style={{
-      width: '220px',
-      minHeight: '100vh',
-      background: 'white',
-      borderRight: '1px solid #e5e7eb',
-      padding: '1.5rem 1rem',
-      flexShrink: 0
-    }}>
-      <p style={{
-        fontWeight: 600,
-        fontSize: '1rem',
-        marginBottom: '1.5rem',
-        paddingLeft: '0.5rem'
-      }}>
-        Task Tracker
-      </p>
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            style={{
-              padding: '0.5rem',
-              borderRadius: '6px',
-              textDecoration: 'none',
-              fontSize: '0.875rem',
-              background: pathname === item.href ? '#eef2ff' : 'transparent',
-              color: pathname === item.href ? '#4f46e5' : '#374151',
-              fontWeight: pathname === item.href ? 500 : 400
-            }}
-          >
-            {item.label}
-          </Link>
-        ))}
-      </nav>
-    </aside>
+    <Drawer
+      variant="permanent"
+      sx={{
+        width: DRAWER_WIDTH,
+        flexShrink: 0,
+        '& .MuiDrawer-paper': {
+          width: DRAWER_WIDTH,
+          boxSizing: 'border-box',
+          border: 'none',
+          borderRight: '1px solid',
+          borderColor: 'divider',
+        },
+      }}
+    >
+      <Box sx={{ p: 2.5 }}>
+        <Typography variant="h6" color="primary">
+          Task Tracker
+        </Typography>
+      </Box>
+
+      <Divider />
+
+      <List sx={{ px: 1, pt: 1 }}>
+        {navItems.map((item) => {
+          const isActive = pathname === item.href
+          return (
+            <ListItem key={item.href} disablePadding sx={{ mb: 0.5 }}>
+              <ListItemButton
+                component={Link}
+                href={item.href}
+                selected={isActive}
+                sx={{
+                  borderRadius: 1,
+                  '&.Mui-selected': {
+                    bgcolor: 'primary.main',
+                    color: 'white',
+                    '&:hover': { bgcolor: 'primary.dark' },
+                  },
+                }}
+              >
+                <ListItemText
+                  primary={item.label}
+                  primaryTypographyProps={{
+                    fontSize: '0.875rem',
+                    fontWeight: isActive ? 500 : 400,
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          )
+        })}
+      </List>
+    </Drawer>
   )
 }
