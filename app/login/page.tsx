@@ -1,88 +1,77 @@
-import Link from 'next/link'
+"use client";
+
+import Link from "next/link";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  TextField,
+  Typography,
+  Divider,
+} from "@mui/material";
 
 export default function LoginPage() {
   return (
-    <main style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        background: 'white',
-        padding: '2rem',
-        borderRadius: '8px',
-        border: '1px solid #e5e7eb',
-        width: '100%',
-        maxWidth: '400px'
-      }}>
-        <h1 style={{ marginBottom: '1.5rem', fontSize: '1.5rem' }}>
-          Sign in
-        </h1>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        bgcolor: "#f9fafb",
+        p: 2,
+      }}
+    >
+      <Card
+        sx={{ width: "100%", maxWidth: 400 }}
+        elevation={0}
+        variant="outlined"
+      >
+        <CardContent sx={{ p: 3 }}>
+          <Typography variant="h5" fontWeight={600} mb={0.5}>
+            Sign in
+          </Typography>
+          <Typography variant="body2" color="text.secondary" mb={3}>
+            Enter your credentials to access your tasks
+          </Typography>
 
-        <div style={{ marginBottom: '1rem' }}>
-          <label
-            htmlFor="email"
-            style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}
-          >
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            placeholder="you@example.com"
-            style={{
-              width: '100%',
-              padding: '0.5rem 0.75rem',
-              border: '1px solid #d1d5db',
-              borderRadius: '6px',
-              fontSize: '1rem'
-            }}
-          />
-        </div>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <TextField
+              id="email"
+              label="Email"
+              type="email"
+              placeholder="you@example.com"
+              fullWidth
+              size="small"
+            />
+            <TextField
+              id="password"
+              label="Password"
+              type="password"
+              placeholder="••••••••"
+              fullWidth
+              size="small"
+            />
+          </Box>
 
-        <div style={{ marginBottom: '1.5rem' }}>
-          <label
-            htmlFor="password"
-            style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}
-          >
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            placeholder="••••••••"
-            style={{
-              width: '100%',
-              padding: '0.5rem 0.75rem',
-              border: '1px solid #d1d5db',
-              borderRadius: '6px',
-              fontSize: '1rem'
-            }}
-          />
-        </div>
+          <Button variant="contained" fullWidth size="large" sx={{ mt: 3 }}>
+            Sign in
+          </Button>
 
-        <button style={{
-          width: '100%',
-          padding: '0.625rem',
-          background: '#4f46e5',
-          color: 'white',
-          border: 'none',
-          borderRadius: '6px',
-          fontSize: '1rem',
-          cursor: 'pointer',
-          marginBottom: '1rem'
-        }}>
-          Sign in
-        </button>
+          <Divider sx={{ my: 2 }} />
 
-        <p style={{ textAlign: 'center', fontSize: '0.875rem', color: '#6b7280' }}>
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" style={{ color: '#4f46e5', textDecoration: 'none' }}>
-            Sign up
-          </Link>
-        </p>
-      </div>
-    </main>
-  )
+          <Typography variant="body2" textAlign="center" color="text.secondary">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/signup"
+              style={{ color: "#4f46e5", textDecoration: "none" }}
+            >
+              Sign up
+            </Link>
+          </Typography>
+        </CardContent>
+      </Card>
+    </Box>
+  );
 }

@@ -1,3 +1,5 @@
+import { Box, Paper, Typography } from '@mui/material'
+
 type StatsBarProps = {
   total: number
   done: number
@@ -5,27 +7,28 @@ type StatsBarProps = {
 }
 
 export default function StatsBar({ total, done, todo }: StatsBarProps) {
+  const stats = [
+    { label: 'Total', value: total, color: 'text.primary' },
+    { label: 'To do', value: todo, color: 'primary.main' },
+    { label: 'Done', value: done, color: 'success.main' },
+  ]
+
   return (
-    <div style={{
-      display: 'flex',
-      gap: '1rem',
-      marginBottom: '1.5rem'
-    }}>
-      {[
-        { label: 'Total', value: total, bg: '#f3f4f6', color: '#111827' },
-        { label: 'To do', value: todo, bg: '#eff6ff', color: '#1d4ed8' },
-        { label: 'Done', value: done, bg: '#f0fdf4', color: '#166534' },
-      ].map(({ label, value, bg, color }) => (
-        <div key={label} style={{
-          background: bg,
-          padding: '0.75rem 1.25rem',
-          borderRadius: '8px',
-          minWidth: '80px'
-        }}>
-          <p style={{ fontSize: '1.25rem', fontWeight: 600, color }}>{value}</p>
-          <p style={{ fontSize: '0.75rem', color: '#6b7280' }}>{label}</p>
-        </div>
+    <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+      {stats.map(({ label, value, color }) => (
+        <Paper
+          key={label}
+          variant="outlined"
+          sx={{ px: 2.5, py: 1.5, minWidth: 80 }}
+        >
+          <Typography variant="h5" fontWeight={600} color={color}>
+            {value}
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            {label}
+          </Typography>
+        </Paper>
       ))}
-    </div>
+    </Box>
   )
 }
