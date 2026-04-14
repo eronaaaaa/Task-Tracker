@@ -18,6 +18,7 @@ const DRAWER_WIDTH = 220
 const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Dashboard', href: '/dashboard' },
+  { label: 'Tasks', href: '/tasks' },
   { label: 'Login', href: '/login' },
 ]
 
