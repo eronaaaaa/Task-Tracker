@@ -1,28 +1,32 @@
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 
 export default function HomePage() {
   return (
-    <main style={{ padding: '2rem' }}>
-      <h1 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '0.5rem' }}>
-        Task Tracker
-      </h1>
-      <p style={{ color: '#6b7280', marginBottom: '1.5rem' }}>
-        Welcome to your task manager.
-      </p>
-      <Link
-        href="/dashboard"
-        style={{
-          display: 'inline-block',
-          padding: '0.5rem 1rem',
-          background: '#4f46e5',
-          color: 'white',
-          borderRadius: '6px',
-          textDecoration: 'none',
-          fontSize: '0.875rem'
-        }}
-      >
-        Go to Dashboard
-      </Link>
+    <main className="flex flex-col items-center justify-center min-h-screen p-8 text-center">
+      <div className="max-w-lg">
+        <div className="inline-block px-3 py-1 bg-indigo-50 text-indigo-600 text-sm font-medium rounded-full mb-6">
+          Built with Next.js + Supabase
+        </div>
+
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          Your tasks, organised.
+        </h1>
+
+        <p className="text-gray-500 text-lg mb-8">
+          A focused task manager built to help you stay on top of
+          your work without the overhead of complex project tools.
+        </p>
+
+        <div className="flex gap-3 justify-center">
+          <Button asChild size="lg">
+            <Link href="/dashboard">View Dashboard</Link>
+          </Button>
+          <Button asChild variant="outline" size="lg">
+            <Link href="/login">Sign in</Link>
+          </Button>
+        </div>
+      </div>
     </main>
   )
 }

@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import Link from "next/link";
+import Link from 'next/link'
 import {
   Box,
   Button,
@@ -9,22 +9,26 @@ import {
   TextField,
   Typography,
   Divider,
-} from "@mui/material";
+  Alert,
+} from '@mui/material'
+import { useState } from 'react'
 
 export default function LoginPage() {
+  const [error, setError] = useState('')
+
   return (
     <Box
       sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        bgcolor: "#f9fafb",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        bgcolor: 'background.default',
         p: 2,
       }}
     >
       <Card
-        sx={{ width: "100%", maxWidth: 400 }}
+        sx={{ width: '100%', maxWidth: 400 }}
         elevation={0}
         variant="outlined"
       >
@@ -36,7 +40,13 @@ export default function LoginPage() {
             Enter your credentials to access your tasks
           </Typography>
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <TextField
               id="email"
               label="Email"
@@ -55,17 +65,23 @@ export default function LoginPage() {
             />
           </Box>
 
-          <Button variant="contained" fullWidth size="large" sx={{ mt: 3 }}>
+          <Button
+            variant="contained"
+            fullWidth
+            size="large"
+            sx={{ mt: 3 }}
+            onClick={() => setError('Auth not wired up yet — coming Day 18!')}
+          >
             Sign in
           </Button>
 
           <Divider sx={{ my: 2 }} />
 
           <Typography variant="body2" textAlign="center" color="text.secondary">
-            Don&apos;t have an account?{" "}
+            Don&apos;t have an account?{' '}
             <Link
               href="/signup"
-              style={{ color: "#4f46e5", textDecoration: "none" }}
+              style={{ color: '#4f46e5', textDecoration: 'none' }}
             >
               Sign up
             </Link>
@@ -73,5 +89,5 @@ export default function LoginPage() {
         </CardContent>
       </Card>
     </Box>
-  );
+  )
 }
