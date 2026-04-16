@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,23 +12,36 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import TagPicker from "@/components/TagPicker";
+import { getTags } from "@/lib/tasks";
+import type { Tag } from "@/lib/tasks";
 
 export default function AddTaskDialog() {
   const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState("");
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+
+  useEffect(() => {
+    getTags().then(setAvailableTags);
+  }, []);
 
   function handleSubmit() {
     if (!title.trim()) return;
-    console.log("New task:", { title, dueDate });
+    console.log("New task:", { title, dueDate, tags: selectedTags });
     toast.success("Task created!");
     setTitle("");
     setDueDate("");
+    setSelectedTags([]);
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm" className="rounded-xl bg-gray-900 hover:bg-gray-700 text-white cursor-pointer">
+        <Button
+          size="sm"
+          className="rounded-xl bg-gray-900 hover:bg-gray-700 text-white cursor-pointer"
+        >
           + Add task
         </Button>
       </DialogTrigger>
@@ -64,7 +77,7 @@ export default function AddTaskDialog() {
               className="text-xs font-semibold text-gray-400 uppercase tracking-wide"
             >
               Due date
-              <span className="normal-case font-normal ml-1 text-gray-300">
+              <span className="text-gray-300 font-normal normal-case ml-1">
                 (optional)
               </span>
             </label>
@@ -76,6 +89,12 @@ export default function AddTaskDialog() {
               className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors text-gray-500"
             />
           </div>
+
+          <TagPicker
+            availableTags={availableTags}
+            selectedTags={selectedTags}
+            onChange={setSelectedTags}
+          />
         </div>
 
         <DialogFooter className="px-5 py-4 bg-gray-50/60 border-t border-gray-50 flex gap-2">
@@ -89,7 +108,11 @@ export default function AddTaskDialog() {
             </Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button size="sm" className="rounded-xl bg-blue-700 hover:bg-blue-800 text-white cursor-pointer" onClick={handleSubmit}>
+            <Button
+              size="sm"
+              className="rounded-xl bg-blue-700 hover:bg-blue-800 text-white cursor-pointer"
+              onClick={handleSubmit}
+            >
               Create task
             </Button>
           </DialogClose>

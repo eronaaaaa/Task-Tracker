@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,8 +17,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import type { Task } from "@/lib/tasks";
+import { getTags, type Tag, type Task } from "@/lib/tasks";
 import { toast } from "sonner";
+import TagPicker from "./TagPicker";
 
 type Props = {
   task: Task;
@@ -30,14 +31,21 @@ export default function EditTaskDialog({ task, open, onClose }: Props) {
   const [title, setTitle] = useState(task.title);
   const [status, setStatus] = useState(task.status);
   const [dueDate, setDueDate] = useState(task.dueDate ?? "");
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
 
   function handleSave() {
     if (!title.trim()) return;
     // Will wire to Supabase on Day 22
     console.log("Saving task:", { id: task.id, title, status, dueDate });
     toast.success("Task updated!");
+    setSelectedTags([]);
     onClose();
   }
+
+  useEffect(() => {
+    getTags().then(setAvailableTags);
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -89,6 +97,11 @@ export default function EditTaskDialog({ task, open, onClose }: Props) {
               className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
             />
           </div>
+          <TagPicker
+            availableTags={availableTags}
+            selectedTags={selectedTags}
+            onChange={setSelectedTags}
+          />
         </div>
 
         <DialogFooter>

@@ -5,7 +5,7 @@ import SecuritySection from "@/components/settings/SecuritySection";
 
 export default function SettingsPage() {
   return (
-    <main className="p-6 max-w-2xl mx-auto">
+    <main className="p-6 max-w-full">
       <div className="mb-6">
         <PageHeader
           title="Settings"

@@ -19,6 +19,7 @@ const navItems = [
   { label: "Home", href: "/" },
   { label: "Dashboard", href: "/dashboard" },
   { label: "Settings", href: "/settings" },
+  { label: "Tags", href: "/tags" },
 
   // { label: 'Tasks', href: '/tasks' },
   // { label: 'Login', href: '/login' },

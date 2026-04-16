@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import TaskActionsDropdown from "@/components/TaskActionsDropdown";
 import type { Task } from "@/lib/tasks";
 import AddTaskDialog from "./AddTaskDialog";
+import TagBadge from "./TagBadge";
 
 type Props = {
   tasks: Task[];
@@ -25,7 +26,7 @@ export default function TaskTable({ tasks, filter = "all" }: Props) {
       <Table>
         <TableHeader>
           <TableRow className="bg-gray-50/80 border-b border-gray-100 hover:bg-gray-50/80">
-            <TableHead className="w-[40%] text-xs font-semibold text-gray-400 uppercase tracking-wide py-3 px-4">
+            <TableHead className="w-[45%] text-xs font-semibold text-gray-400 uppercase tracking-wide py-3 px-4">
               Task
             </TableHead>
             <TableHead className="text-xs font-semibold text-gray-400 uppercase tracking-wide py-3">
@@ -84,13 +85,22 @@ export default function TaskTable({ tasks, filter = "all" }: Props) {
                 key={task.id}
                 className="border-b border-gray-50 hover:bg-gray-50/60 transition-colors"
               >
-                <TableCell className="py-3 px-4">
-                  <Link
-                    href={`/tasks/${task.id}`}
-                    className="font-medium text-gray-800 hover:text-indigo-600 transition-colors text-sm"
-                  >
-                    {task.title}
-                  </Link>
+                <TableCell>
+                  <div className="flex flex-col gap-1">
+                    <Link
+                      href={`/tasks/${task.id}`}
+                      className="font-medium text-gray-800 hover:text-indigo-600 transition-colors text-sm"
+                    >
+                      {task.title}
+                    </Link>
+                    {task.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1">
+                        {task.tags.map((tag) => (
+                          <TagBadge key={tag.id} tag={tag} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </TableCell>
                 <TableCell className="py-3">
                   <Badge
@@ -104,12 +114,14 @@ export default function TaskTable({ tasks, filter = "all" }: Props) {
                     {task.status === "done" ? "Done" : "To do"}
                   </Badge>
                 </TableCell>
+
                 <TableCell className="py-3 text-gray-400 text-sm">
                   {task.dueDate ?? <span className="text-gray-200">—</span>}
                 </TableCell>
                 <TableCell className="py-3 text-gray-400 text-sm">
                   {task.createdAt}
                 </TableCell>
+
                 <TableCell className="py-3 pr-3">
                   <TaskActionsDropdown task={task} />
                 </TableCell>

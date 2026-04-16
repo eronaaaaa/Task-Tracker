@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { notFound } from "next/navigation";
 import TaskDetailActions from "@/components/TaskDetailActions";
+import TagBadge from "@/components/TagBadge";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -44,6 +45,18 @@ export default async function TaskDetailPage({ params }: Props) {
 
           <TaskDetailActions task={task} />
         </div>
+        {task.tags.length > 0 && (
+          <div className="px-6 py-4 border-b border-gray-50">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+              Tags
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {task.tags.map((tag) => (
+                <TagBadge key={tag.id} tag={tag} />
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="px-6 py-5 border-b border-gray-50">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
