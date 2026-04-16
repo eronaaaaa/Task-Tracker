@@ -1,47 +1,74 @@
-'use client'
+"use client";
 
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
-import type { Task } from '@/lib/tasks'
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import EditTaskDialog from "@/components/EditTaskDialog";
+import DeleteTaskDialog from "@/components/DeleteTaskDialog";
+import type { Task } from "@/lib/tasks";
 
 type Props = {
-  task: Task
-}
+  task: Task;
+};
 
 export default function TaskActionsDropdown({ task }: Props) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-          ···
-        </Button>
-      </DropdownMenuTrigger>
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
-      <DropdownMenuContent align="end" className="w-40">
-        <DropdownMenuItem
-          onClick={() => console.log('Edit:', task.id)}
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer">
+            ···
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent
+          align="end"
+          className="w-40 p-1.5 rounded-xl border-none ring-0 bg-white shadow-sm"
         >
-          Edit
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => console.log('Mark done:', task.id)}
-        >
-          {task.status === 'done' ? 'Mark as todo' : 'Mark as done'}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="text-red-600 focus:text-red-600"
-          onClick={() => console.log('Delete:', task.id)}
-        >
-          Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  )
+          <DropdownMenuItem
+            className="rounded-lg px-3 py-2 text-sm cursor-pointer hover:bg-gray-50"
+            onClick={() => setEditOpen(true)}
+          >
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuSeparator className=" mx-auto bg-gray-200 w-[98%]" />
+
+          <DropdownMenuItem
+            className="rounded-lg px-3 py-2 text-sm cursor-pointer hover:bg-gray-50"
+            onClick={() => console.log("Toggle status:", task.id)}
+          >
+            {task.status === "done" ? "Mark as todo" : "Mark as done"}
+          </DropdownMenuItem>
+          <DropdownMenuSeparator className=" mx-auto bg-gray-200 w-[98%]" />
+          <DropdownMenuItem
+            className="rounded-lg px-3 py-2 text-sm cursor-pointer text-red-600 hover:bg-red-50 focus:text-red-600"
+            onClick={() => setDeleteOpen(true)}
+          >
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <EditTaskDialog
+        task={task}
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+      />
+
+      <DeleteTaskDialog
+        task={task}
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+      />
+    </>
+  );
 }

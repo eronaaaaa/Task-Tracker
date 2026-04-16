@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
+import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -8,68 +8,79 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
-import TaskActionsDropdown from '@/components/TaskActionsDropdown'
-import type { Task } from '@/lib/tasks'
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import TaskActionsDropdown from "@/components/TaskActionsDropdown";
+import type { Task } from "@/lib/tasks";
 
 type Props = {
-  tasks: Task[]
-}
+  tasks: Task[];
+};
 
 export default function TaskTable({ tasks }: Props) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
+    <div className="rounded-2xl border border-gray-100 bg-white overflow-hidden shadow-sm">
       <Table>
         <TableHeader>
-          <TableRow className="bg-gray-50">
-            <TableHead className="w-[40%]">Task</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Due date</TableHead>
-            <TableHead>Created</TableHead>
-            <TableHead className="w-[50px]"></TableHead>
+          <TableRow className="bg-gray-50/80 border-b border-gray-100 hover:bg-gray-50/80">
+            <TableHead className="w-[40%] text-xs font-semibold text-gray-400 uppercase tracking-wide py-3 px-4">
+              Task
+            </TableHead>
+            <TableHead className="text-xs font-semibold text-gray-400 uppercase tracking-wide py-3">
+              Status
+            </TableHead>
+            <TableHead className="text-xs font-semibold text-gray-400 uppercase tracking-wide py-3">
+              Due date
+            </TableHead>
+            <TableHead className="text-xs font-semibold text-gray-400 uppercase tracking-wide py-3">
+              Created
+            </TableHead>
+            <TableHead className="w-[50px]" />
           </TableRow>
         </TableHeader>
         <TableBody>
           {tasks.length === 0 ? (
-            <TableRow>
+            <TableRow className="hover:bg-transparent">
               <TableCell
                 colSpan={5}
-                className="text-center text-gray-400 py-8"
+                className="text-center text-gray-300 py-16 text-sm"
               >
                 No tasks yet. Add one to get started.
               </TableCell>
             </TableRow>
           ) : (
             tasks.map((task) => (
-              <TableRow key={task.id} className="hover:bg-gray-50">
-                <TableCell>
+              <TableRow
+                key={task.id}
+                className="border-b border-gray-50 hover:bg-gray-50/60 transition-colors"
+              >
+                <TableCell className="py-3 px-4">
                   <Link
                     href={`/tasks/${task.id}`}
-                    className="font-medium text-gray-900 hover:text-indigo-600 transition-colors"
+                    className="font-medium text-gray-800 hover:text-indigo-600 transition-colors text-sm"
                   >
                     {task.title}
                   </Link>
                 </TableCell>
-                <TableCell>
+                <TableCell className="py-3">
                   <Badge
-                    variant={task.status === 'done' ? 'default' : 'outline'}
+                    variant="outline"
                     className={
-                      task.status === 'done'
-                        ? 'bg-green-100 text-green-700 border-green-200 hover:bg-green-100'
-                        : 'text-gray-600'
+                      task.status === "done"
+                        ? "bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-50 text-xs font-medium"
+                        : "bg-amber-50 text-amber-600 border-amber-100 hover:bg-amber-50 text-xs font-medium"
                     }
                   >
-                    {task.status === 'done' ? 'Done' : 'To do'}
+                    {task.status === "done" ? "Done" : "To do"}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-gray-500 text-sm">
-                  {task.dueDate ?? '—'}
+                <TableCell className="py-3 text-gray-400 text-sm">
+                  {task.dueDate ?? <span className="text-gray-200">—</span>}
                 </TableCell>
-                <TableCell className="text-gray-500 text-sm">
+                <TableCell className="py-3 text-gray-400 text-sm">
                   {task.createdAt}
                 </TableCell>
-                <TableCell>
+                <TableCell className="py-3 pr-3">
                   <TaskActionsDropdown task={task} />
                 </TableCell>
               </TableRow>
@@ -78,5 +89,5 @@ export default function TaskTable({ tasks }: Props) {
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
