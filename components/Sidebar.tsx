@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Box,
   Drawer,
@@ -11,19 +11,21 @@ import {
   ListItemText,
   Typography,
   Divider,
-} from '@mui/material'
+} from "@mui/material";
 
-const DRAWER_WIDTH = 220
+const DRAWER_WIDTH = 220;
 
 const navItems = [
-  { label: 'Home', href: '/' },
-  { label: 'Dashboard', href: '/dashboard' },
-  { label: 'Tasks', href: '/tasks' },
-  { label: 'Login', href: '/login' },
-]
+  { label: "Home", href: "/" },
+  { label: "Dashboard", href: "/dashboard" },
+  { label: "Settings", href: "/settings" },
+
+  // { label: 'Tasks', href: '/tasks' },
+  // { label: 'Login', href: '/login' },
+];
 
 export default function Sidebar() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <Drawer
@@ -31,13 +33,13 @@ export default function Sidebar() {
       sx={{
         width: DRAWER_WIDTH,
         flexShrink: 0,
-        display: { xs: 'none', md: 'block' },
-        '& .MuiDrawer-paper': {
+        display: { xs: "none", md: "block" },
+        "& .MuiDrawer-paper": {
           width: DRAWER_WIDTH,
-          boxSizing: 'border-box',
-          border: 'none',
-          borderRight: '1px solid',
-          borderColor: 'divider',
+          boxSizing: "border-box",
+          border: "none",
+          borderRight: "1px solid",
+          borderColor: "divider",
         },
       }}
     >
@@ -51,7 +53,7 @@ export default function Sidebar() {
 
       <List sx={{ px: 1, pt: 1 }}>
         {navItems.map((item) => {
-          const isActive = pathname === item.href
+          const isActive = pathname === item.href;
           return (
             <ListItem key={item.href} disablePadding sx={{ mb: 0.5 }}>
               <ListItemButton
@@ -60,25 +62,25 @@ export default function Sidebar() {
                 selected={isActive}
                 sx={{
                   borderRadius: 1,
-                  '&.Mui-selected': {
-                    bgcolor: 'primary.main',
-                    color: 'white',
-                    '&:hover': { bgcolor: 'primary.dark' },
+                  "&.Mui-selected": {
+                    bgcolor: "primary.main",
+                    color: "white",
+                    "&:hover": { bgcolor: "primary.dark" },
                   },
                 }}
               >
                 <ListItemText
                   primary={item.label}
                   primaryTypographyProps={{
-                    fontSize: '0.875rem',
+                    fontSize: "0.875rem",
                     fontWeight: isActive ? 500 : 400,
                   }}
                 />
               </ListItemButton>
             </ListItem>
-          )
+          );
         })}
       </List>
     </Drawer>
-  )
+  );
 }

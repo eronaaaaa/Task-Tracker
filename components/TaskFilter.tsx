@@ -48,13 +48,19 @@ export default function TaskFilter({ tasks }: Props) {
         ))}
       </div>
 
-      <TaskTableFiltered tasks={filtered} />
+      <TaskTableFiltered tasks={filtered} filter={filter} />
     </div>
   );
 }
 
 import TaskTable from "@/components/TaskTable";
 
-function TaskTableFiltered({ tasks }: { tasks: Task[] }) {
-  return <TaskTable tasks={tasks} />;
+function TaskTableFiltered({
+  tasks,
+  filter,
+}: {
+  tasks: Task[];
+  filter: "all" | "todo" | "done";
+}) {
+  return <TaskTable tasks={tasks} filter={filter} />;
 }

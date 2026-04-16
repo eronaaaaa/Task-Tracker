@@ -2,8 +2,8 @@ import { getTasks, getTaskStats } from "@/lib/tasks";
 import PageHeader from "@/components/PageHeader";
 import StatsBar from "@/components/StatsBar";
 import AddTaskDialog from "@/components/AddTaskDialog";
-import TaskFilter from "@/components/TaskFilter";
 import { Box } from "@mui/material";
+import TaskFilter from "@/components/TaskFilter";
 
 export default async function DashboardPage() {
   const [tasks, stats] = await Promise.all([getTasks(), getTaskStats()]);

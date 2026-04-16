@@ -12,12 +12,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import TaskActionsDropdown from "@/components/TaskActionsDropdown";
 import type { Task } from "@/lib/tasks";
+import AddTaskDialog from "./AddTaskDialog";
 
 type Props = {
   tasks: Task[];
+  filter?: "all" | "todo" | "done";
 };
 
-export default function TaskTable({ tasks }: Props) {
+export default function TaskTable({ tasks, filter = "all" }: Props) {
   return (
     <div className="rounded-2xl border border-gray-100 bg-white overflow-hidden shadow-sm">
       <Table>
@@ -41,11 +43,39 @@ export default function TaskTable({ tasks }: Props) {
         <TableBody>
           {tasks.length === 0 ? (
             <TableRow className="hover:bg-transparent">
-              <TableCell
-                colSpan={5}
-                className="text-center text-gray-300 py-16 text-sm"
-              >
-                No tasks yet. Add one to get started.
+              <TableCell colSpan={5} className="py-0">
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center mb-4">
+                    <svg
+                      className="w-5 h-5 text-gray-300"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                      />
+                    </svg>
+                  </div>
+                  <p className="text-sm font-medium text-gray-500 mb-1">
+                    {filter === "all"
+                      ? "No tasks yet"
+                      : filter === "done"
+                        ? "No completed tasks"
+                        : "No pending tasks"}
+                  </p>
+                  <p className="text-xs text-gray-300 mb-5">
+                    {filter === "all"
+                      ? "Add your first task to get started"
+                      : filter === "done"
+                        ? "Complete a task and it will appear here"
+                        : "All your tasks are done — nice work!"}
+                  </p>
+                  {filter === "all" && <AddTaskDialog />}
+                </div>
               </TableCell>
             </TableRow>
           ) : (
