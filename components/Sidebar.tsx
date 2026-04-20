@@ -12,6 +12,7 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
+import UserMenu from "./UserMenu";
 
 const DRAWER_WIDTH = 220;
 
@@ -41,6 +42,8 @@ export default function Sidebar() {
           border: "none",
           borderRight: "1px solid",
           borderColor: "divider",
+          display: "flex",
+          flexDirection: "column",
         },
       }}
     >
@@ -82,6 +85,11 @@ export default function Sidebar() {
           );
         })}
       </List>
+
+      <Divider />
+      <Box sx={{ p: 1.5 }}>
+        <UserMenu />
+      </Box>
     </Drawer>
   );
 }
