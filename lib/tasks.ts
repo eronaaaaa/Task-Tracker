@@ -1,3 +1,7 @@
+// lib/tasks.ts
+// NOTE: Dummy data — will be replaced with Supabase queries on Day 22
+// Types stay the same, only the fetch functions change
+
 export type Tag = {
   id: string;
   name: string;

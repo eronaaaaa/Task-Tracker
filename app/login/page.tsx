@@ -1,109 +1,128 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  TextField,
-  Typography,
-  Divider,
-  Alert,
-} from "@mui/material";
-import { useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import Link from 'next/link'
+import { useState, useTransition, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { signIn } from '@/lib/auth/actions'
+import { Button } from '@/components/ui/button'
 
-export default function LoginPage() {
-  const [error, setError] = useState("");
-  const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo");
+function LoginForm() {
+  const [error, setError] = useState('')
+  const [isPending, startTransition] = useTransition()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirectTo')
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setError('')
+
+    const formData = new FormData(e.currentTarget)
+
+    startTransition(async () => {
+      const result = await signIn(formData)
+      if (result?.error) {
+        setError(result.error)
+      }
+    })
+  }
 
   return (
-    <Suspense>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "100vh",
-          bgcolor: "background.default",
-          p: 2,
-        }}
-      >
-        <Card
-          sx={{ width: "100%", maxWidth: 400 }}
-          elevation={0}
-          variant="outlined"
-        >
-          <CardContent sx={{ p: 3 }}>
-            <Typography variant="h5" fontWeight={600} mb={0.5}>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
+      <div className="w-full max-w-sm">
+
+        <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+
+          <div className="px-6 pt-6 pb-5 border-b border-gray-50">
+            <h1 className="text-lg font-semibold text-gray-900">
               Sign in
-            </Typography>
-            <Typography variant="body2" color="text.secondary" mb={3}>
+            </h1>
+            <p className="text-sm text-gray-400 mt-0.5">
               Enter your credentials to access your tasks
-            </Typography>
+            </p>
+          </div>
 
-            {redirectTo && (
-              <Alert severity="info" sx={{ mb: 2 }}>
-                Please sign in to continue
-              </Alert>
-            )}
+          <form onSubmit={handleSubmit}>
+            <div className="px-6 py-5 flex flex-col gap-4">
 
-            {error && (
-              <Alert severity="error" sx={{ mb: 2 }}>
-                {error}
-              </Alert>
-            )}
+              {redirectTo && (
+                <div className="px-3 py-2.5 bg-indigo-50 border border-indigo-100 rounded-xl">
+                  <p className="text-xs text-indigo-600">
+                    Please sign in to continue
+                  </p>
+                </div>
+              )}
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <TextField
-                id="email"
-                label="Email"
-                type="email"
-                placeholder="you@example.com"
-                fullWidth
-                size="small"
-              />
-              <TextField
-                id="password"
-                label="Password"
-                type="password"
-                placeholder="••••••••"
-                fullWidth
-                size="small"
-              />
-            </Box>
+              {error && (
+                <div className="px-3 py-2.5 bg-red-50 border border-red-100 rounded-xl">
+                  <p className="text-xs text-red-600">{error}</p>
+                </div>
+              )}
 
-            <Button
-              variant="contained"
-              fullWidth
-              size="large"
-              sx={{ mt: 3 }}
-              onClick={() => setError("Auth not wired up yet — coming Day 18!")}
-            >
-              Sign in
-            </Button>
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor="email"
+                  className="text-xs font-semibold text-gray-400 uppercase tracking-wide"
+                >
+                  Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                  className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors placeholder:text-gray-300"
+                />
+              </div>
 
-            <Divider sx={{ my: 2 }} />
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor="password"
+                  className="text-xs font-semibold text-gray-400 uppercase tracking-wide"
+                >
+                  Password
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  required
+                  className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors placeholder:text-gray-300"
+                />
+              </div>
+            </div>
 
-            <Typography
-              variant="body2"
-              textAlign="center"
-              color="text.secondary"
-            >
-              Don&apos;t have an account?{" "}
-              <Link
-                href="/signup"
-                style={{ color: "#4f46e5", textDecoration: "none" }}
+            <div className="px-6 py-4 bg-gray-50/60 border-t border-gray-50 flex flex-col gap-3">
+              <Button
+                type="submit"
+                className="w-full rounded-xl"
+                disabled={isPending}
               >
-                Sign up
-              </Link>
-            </Typography>
-          </CardContent>
-        </Card>
-      </Box>
+                {isPending ? 'Signing in...' : 'Sign in'}
+              </Button>
+
+              <p className="text-center text-xs text-gray-400">
+                Don&apos;t have an account?{' '}
+                <Link
+                  href="/signup"
+                  className="text-indigo-600 hover:text-indigo-700 font-medium"
+                >
+                  Sign up
+                </Link>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
     </Suspense>
-  );
+  )
 }
