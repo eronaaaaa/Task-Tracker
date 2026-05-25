@@ -33,7 +33,7 @@ export default function TaskActionsDropdown({ task }: Props) {
         toast.success(
           task.status === 'done'
             ? 'Marked as to do'
-            : 'Marked as done'
+            : 'Marked as done ✓'
         )
       }
     })
@@ -49,7 +49,7 @@ export default function TaskActionsDropdown({ task }: Props) {
             className="h-7 w-7 p-0 rounded-lg"
             disabled={isPending}
           >
-            ···
+            {isPending ? '...' : '···'}
           </Button>
         </DropdownMenuTrigger>
 

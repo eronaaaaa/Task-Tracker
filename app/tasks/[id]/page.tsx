@@ -17,6 +17,11 @@ export default async function TaskDetailPage({ params }: Props) {
 
   if (!task) notFound()
 
+      function isOverdue(dueDate: string | null, status: string) {
+  if (!dueDate || status === 'done') return false
+  return new Date(dueDate) < new Date(new Date().toDateString())
+}
+
   return (
     <main className="p-6 max-w-3xl">
       <Link
@@ -46,7 +51,6 @@ export default async function TaskDetailPage({ params }: Props) {
           <TaskDetailActions task={task} />
         </div>
 
-        {/* Tags */}
         {task.tags.length > 0 && (
           <div className="px-6 py-4 border-b border-gray-50">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
@@ -60,7 +64,6 @@ export default async function TaskDetailPage({ params }: Props) {
           </div>
         )}
 
-        {/* Description */}
         <div className="px-6 py-5 border-b border-gray-50">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
             Description
@@ -76,7 +79,6 @@ export default async function TaskDetailPage({ params }: Props) {
           )}
         </div>
 
-        {/* Metadata */}
         <div className="grid grid-cols-2 divide-x divide-gray-50">
           <div className="px-6 py-4">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
@@ -86,7 +88,11 @@ export default async function TaskDetailPage({ params }: Props) {
               {task.due_date ?? (
                 <span className="text-gray-300">Not set</span>
               )}
-            </p>
+            </p>{isOverdue(task.due_date, task.status) && (
+        <span className="text-xs bg-red-50 text-red-500 border border-red-100 px-2 py-0.5 rounded-full">
+          Overdue
+        </span>
+      )}
           </div>
           <div className="px-6 py-4">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
@@ -98,7 +104,6 @@ export default async function TaskDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Comments */}
         <div className="px-6 py-5 border-t border-gray-50">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
             Comments

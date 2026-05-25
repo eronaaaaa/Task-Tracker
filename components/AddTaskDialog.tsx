@@ -12,9 +12,9 @@ import {
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import TagPicker from '@/components/TagPicker'
-import { getTags } from '@/lib/tasks'
+import { getTags } from '@/lib/data/tags'
 import { createTask } from '@/lib/actions/tasks'
-import type { Tag } from '@/lib/tasks'
+import type { Tag } from '@/lib/data/tasks'
 
 export default function AddTaskDialog() {
   const [open, setOpen] = useState(false)

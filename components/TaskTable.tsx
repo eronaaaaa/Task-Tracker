@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import TaskActionsDropdown from "@/components/TaskActionsDropdown";
-import type { Task } from "@/lib/data/tasks";
-import AddTaskDialog from "./AddTaskDialog";
+import type { Task } from '@/lib/data/tasks'
+import AddTaskDialog from '@/components/AddTaskDialog'
 import TagBadge from "./TagBadge";
 
 type Props = {
@@ -21,6 +21,11 @@ type Props = {
 };
 
 export default function TaskTable({ tasks, filter = "all" }: Props) {
+
+  function isOverdue(dueDate: string | null, status: string) {
+  if (!dueDate || status === 'done') return false
+  return new Date(dueDate) < new Date(new Date().toDateString())
+}
   return (
     <div className="rounded-2xl border border-gray-100 bg-white overflow-hidden shadow-sm">
       <Table>
@@ -116,6 +121,8 @@ export default function TaskTable({ tasks, filter = "all" }: Props) {
                 </TableCell>
 
                 <TableCell className="py-3 text-gray-400 text-sm">
+                        {isOverdue(task.due_date, task.status) && '⚠ '}
+
                   {task.due_date ?? <span className="text-gray-200">—</span>}
                 </TableCell>
                 <TableCell className="py-3 text-gray-400 text-sm">
