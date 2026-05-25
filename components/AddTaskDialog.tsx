@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -8,45 +8,62 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import TagPicker from "@/components/TagPicker";
-import { getTags } from "@/lib/tasks";
-import type { Tag } from "@/lib/tasks";
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
+import TagPicker from '@/components/TagPicker'
+import { getTags } from '@/lib/tasks'
+import { createTask } from '@/lib/actions/tasks'
+import type { Tag } from '@/lib/tasks'
 
 export default function AddTaskDialog() {
-  const [title, setTitle] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
-  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+  const [open, setOpen] = useState(false)
+  const [title, setTitle] = useState('')
+  const [dueDate, setDueDate] = useState('')
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+  const [availableTags, setAvailableTags] = useState<Tag[]>([])
+  const [isPending, startTransition] = useTransition()
 
   useEffect(() => {
-    getTags().then(setAvailableTags);
-  }, []);
+    getTags().then(setAvailableTags)
+  }, [])
 
-  function handleSubmit() {
-    if (!title.trim()) return;
-    console.log("New task:", { title, dueDate, tags: selectedTags });
-    toast.success("Task created!");
-    setTitle("");
-    setDueDate("");
-    setSelectedTags([]);
+  function handleClose() {
+    setOpen(false)
+    setTitle('')
+    setDueDate('')
+    setSelectedTags([])
+  }
+
+  async function handleSubmit() {
+    if (!title.trim()) return
+
+    const formData = new FormData()
+    formData.append('title', title)
+    formData.append('dueDate', dueDate)
+    selectedTags.forEach((tag) => formData.append('tagIds', tag.id))
+
+    startTransition(async () => {
+      const result = await createTask(formData)
+
+      if (result?.error) {
+        toast.error(result.error)
+      } else {
+        toast.success('Task created!')
+        handleClose()
+      }
+    })
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          size="sm"
-          className="rounded-xl bg-gray-900 hover:bg-gray-700 text-white cursor-pointer"
-        >
+        <Button size="sm" className="rounded-xl">
           + Add task
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-md rounded-2xl border border-gray-100 shadow-sm p-0 gap-0 overflow-hidden bg-white ring-0">
+      <DialogContent className="sm:max-w-md bg-white rounded-2xl border border-gray-100 shadow-sm p-0 gap-0 overflow-hidden">
         <DialogHeader className="px-5 pt-5 pb-4 border-b border-gray-50">
           <DialogTitle className="text-base font-semibold text-gray-900">
             New task
@@ -98,26 +115,25 @@ export default function AddTaskDialog() {
         </div>
 
         <DialogFooter className="px-5 py-4 bg-gray-50/60 border-t border-gray-50 flex gap-2">
-          <DialogClose asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-xl border-gray-200 text-gray-500 hover:text-gray-700 cursor-pointer"
-            >
-              Cancel
-            </Button>
-          </DialogClose>
-          <DialogClose asChild>
-            <Button
-              size="sm"
-              className="rounded-xl bg-blue-700 hover:bg-blue-800 text-white cursor-pointer"
-              onClick={handleSubmit}
-            >
-              Create task
-            </Button>
-          </DialogClose>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-xl border-gray-200 text-gray-500 hover:text-gray-700"
+            onClick={handleClose}
+            disabled={isPending}
+          >
+            Cancel
+          </Button>
+          <Button
+            size="sm"
+            className="rounded-xl"
+            onClick={handleSubmit}
+            disabled={isPending || !title.trim()}
+          >
+            {isPending ? 'Creating...' : 'Create task'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

@@ -15,22 +15,24 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang="en">
       <body suppressHydrationWarning>
         <EmotionRegistry>
           <MuiProvider>
-            <Box sx={{ display: "flex", minHeight: "100vh" }}>
+            <Box sx={{ display: 'flex', minHeight: '100vh' }}>
               <Sidebar />
               <Box
                 component="main"
                 sx={{
                   flexGrow: 1,
-                  bgcolor: "background.default",
-                  minHeight: "100vh",
-                  ml: { xs: 0 },
+                  bgcolor: 'background.default',
+                  minHeight: '100vh',
+                  ml: { xs: 0, md: '220px' },
+                  width: { xs: '100%', md: 'calc(100% - 220px)' },
+                  overflow: 'hidden',
                 }}
               >
                 <MobileHeader />
@@ -42,5 +44,5 @@ export default function RootLayout({
         </EmotionRegistry>
       </body>
     </html>
-  );
+  )
 }
