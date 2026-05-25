@@ -4,10 +4,15 @@ import Link from 'next/link'
 import { useState, useTransition } from 'react'
 import { signUp } from '@/lib/auth/actions'
 import { Button } from '@/components/ui/button'
+import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
+
 
 export default function SignUpPage() {
   const [error, setError] = useState('')
   const [isPending, startTransition] = useTransition()
+    const router = useRouter()
+
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -17,9 +22,15 @@ export default function SignUpPage() {
 
     startTransition(async () => {
       const result = await signUp(formData)
-      if (result?.error) {
-        setError(result.error)
-      }
+       if (result?.error) {
+    setError(result.error)
+    return
+  }
+
+    const supabase = createClient()
+  await supabase.auth.refreshSession()
+  router.push('/dashboard')
+  router.refresh()
     })
   }
 

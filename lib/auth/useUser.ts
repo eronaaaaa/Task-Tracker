@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -11,20 +12,21 @@ export function useUser() {
   useEffect(() => {
     const supabase = createClient()
 
-    // Get initial session
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    async function init() {
+      await supabase.auth.refreshSession()
+      const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
       setLoading(false)
-    })
+    }
 
-    // Listen for auth state changes — keeps UI in sync
-    // when session changes (sign in, sign out, token refresh)
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
+    init()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null)
+        setLoading(false)
+      }
+    )
 
     return () => subscription.unsubscribe()
   }, [])

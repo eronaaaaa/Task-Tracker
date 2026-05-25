@@ -16,7 +16,6 @@ export default function Sidebar() {
     { label: 'Dashboard', href: '/dashboard' },
     { label: 'Tags', href: '/tags' },
     { label: 'Settings', href: '/settings' },
-    // Only show Login when not authenticated
     ...(!user ? [{ label: 'Login', href: '/login' }] : []),
   ]
 

@@ -28,7 +28,7 @@ useEffect(() => {
   fetch('/api/tags')
     .then((r) => r.json())
     .then((res) => setAvailableTags(res.data ?? []))
-}, [open]) // refetch when dialog opens
+}, [open])
 
   function handleClose() {
     setOpen(false)

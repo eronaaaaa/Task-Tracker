@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,46 +8,29 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import Link from 'next/link'
-import { signOut } from '@/lib/auth/actions'
+import { useUser } from '@/lib/auth/useUser'
 import { createClient } from '@/lib/supabase/client'
-
-type User = {
-  name: string
-  email: string
-  initials: string
-}
+import { useRouter } from 'next/navigation'
 
 export default function UserMenu() {
-  const [user, setUser] = useState<User>({
-    name: '',
-    email: '',
-    initials: '',
-  })
+  const { user, loading } = useUser()
+  const router = useRouter()
 
-  useEffect(() => {
+  const name = user?.user_metadata?.name ||
+    user?.email?.split('@')[0] || ''
+  const initials = name
+    .split(' ')
+    .map((n: string) => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+
+  async function handleSignOut() {
     const supabase = createClient()
-
-    async function getUser() {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        const name = user.user_metadata?.name || user.email?.split('@')[0] || 'User'
-        const initials = name
-          .split(' ')
-          .map((n: string) => n[0])
-          .join('')
-          .toUpperCase()
-          .slice(0, 2)
-
-        setUser({
-          name,
-          email: user.email ?? '',
-          initials,
-        })
-      }
-    }
-
-    getUser()
-  }, [])
+    await supabase.auth.signOut()
+    router.push('/login')
+    router.refresh()
+  }
 
   return (
     <DropdownMenu modal={false}>
@@ -56,15 +38,15 @@ export default function UserMenu() {
         <button className="w-full flex items-center gap-2.5 px-2 py-2 rounded-xl hover:bg-gray-100/80 transition-colors text-left group">
           <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
             <span className="text-xs font-semibold text-indigo-600">
-              {user.initials || '?'}
+              {loading ? '?' : (initials || '?')}
             </span>
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-xs font-semibold text-gray-700 truncate">
-              {user.name || 'Loading...'}
+              {loading ? 'Loading...' : (name || 'User')}
             </p>
             <p className="text-xs text-gray-400 truncate">
-              {user.email}
+              {user?.email ?? ''}
             </p>
           </div>
           <svg
@@ -89,8 +71,8 @@ export default function UserMenu() {
         className="w-52 p-1.5 rounded-xl border border-gray-100 bg-white shadow-sm ring-0 z-[9999]"
       >
         <div className="px-2.5 py-2 mb-1">
-          <p className="text-xs font-semibold text-gray-700">{user.name}</p>
-          <p className="text-xs text-gray-400 truncate">{user.email}</p>
+          <p className="text-xs font-semibold text-gray-700">{name}</p>
+          <p className="text-xs text-gray-400 truncate">{user?.email}</p>
         </div>
 
         <DropdownMenuSeparator className="bg-gray-100 my-1" />
@@ -113,7 +95,7 @@ export default function UserMenu() {
 
         <DropdownMenuItem
           className="rounded-lg px-2.5 py-2 text-sm cursor-pointer text-red-500 hover:bg-red-50 focus:text-red-500"
-          onClick={() => signOut()}
+          onClick={handleSignOut}
         >
           Sign out
         </DropdownMenuItem>

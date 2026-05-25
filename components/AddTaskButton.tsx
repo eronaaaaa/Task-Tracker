@@ -1,6 +1,3 @@
-//this component needs use client because it uses useState, which is a React hook that can only be used in client components.
-//the button also has an onClick handler that updates the state, which requires client-side interactivity.
-
 'use client'
 
 import { useState } from 'react'

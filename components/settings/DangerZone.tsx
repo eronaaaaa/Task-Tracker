@@ -21,8 +21,6 @@ export default function DangerZone() {
       toast.error("Please type the confirmation text exactly");
       return;
     }
-    // Will wire to Supabase on Day 18
-    console.log("Deleting account");
     toast.error("Account deletion wired up on Day 18");
     setConfirmOpen(false);
     setConfirmText("");

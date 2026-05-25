@@ -8,9 +8,6 @@ export async function createTask(formData: FormData) {
   const supabase = await createClient()
   const user = await requireUser()
 
-   console.log('CURRENT USER:', user)  // ← add this temporarily
-  console.log('USER ID:', user.id)
-
   const title = formData.get('title') as string
   const dueDate = formData.get('dueDate') as string
   const tagIds = formData.getAll('tagIds') as string[]
@@ -19,7 +16,6 @@ export async function createTask(formData: FormData) {
     return { error: 'Title is required' }
   }
 
-  // Insert the task
   const { data: task, error } = await supabase
     .from('tasks')
     .insert({
@@ -33,7 +29,6 @@ export async function createTask(formData: FormData) {
 
   if (error) return { error: error.message }
 
-  // Insert tag relationships if any tags selected
   if (tagIds.length > 0) {
     const tagInserts = tagIds.map((tag_id) => ({
       task_id: task.id,
@@ -47,7 +42,6 @@ export async function createTask(formData: FormData) {
     if (tagError) return { error: tagError.message }
   }
 
-  // Revalidate dashboard so new task appears immediately
   revalidatePath('/dashboard')
 
   return { data: task }
@@ -67,7 +61,6 @@ export async function updateTask(formData: FormData) {
   if (!id) return { error: 'Task ID is required' }
   if (!title?.trim()) return { error: 'Title is required' }
 
-  // Update the task — RLS ensures user can only update their own
   const { data: task, error } = await supabase
     .from('tasks')
     .update({
@@ -83,14 +76,11 @@ export async function updateTask(formData: FormData) {
 
   if (error) return { error: error.message }
 
-  // Replace tag relationships
-  // 1. Delete existing tags for this task
   await supabase
     .from('task_tags')
     .delete()
     .eq('task_id', id)
 
-  // 2. Insert new tag relationships
   if (tagIds.length > 0) {
     const tagInserts = tagIds.map((tag_id) => ({
       task_id: id,

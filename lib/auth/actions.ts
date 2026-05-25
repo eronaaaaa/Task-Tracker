@@ -23,19 +23,20 @@ export async function signUp(formData: FormData) {
     return { error: 'Password must be at least 8 characters' }
   }
 
-  const { error } = await supabase.auth.signUp({
+   const { error } = await supabase.auth.signUp({
     email,
     password,
-    options: {
-      data: { name },
-    },
+    options: { data: { name } },
   })
 
   if (error) {
+    if (error.message.includes('User already registered')) {
+      return { error: 'An account with this email already exists' }
+    }
     return { error: error.message }
   }
 
-  redirect('/dashboard')
+  return { success: true }
 }
 
 export async function signIn(formData: FormData) {
@@ -43,7 +44,6 @@ export async function signIn(formData: FormData) {
 
   const email = formData.get('email') as string
   const password = formData.get('password') as string
-  const redirectTo = formData.get('redirectTo') as string
 
   if (!email || !password) {
     return { error: 'Email and password are required' }
@@ -58,7 +58,7 @@ export async function signIn(formData: FormData) {
     return { error: error.message }
   }
 
-  redirect(redirectTo || '/dashboard')
+  return { success: true }
 }
 
 export async function signOut() {

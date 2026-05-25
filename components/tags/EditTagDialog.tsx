@@ -39,8 +39,6 @@ export default function EditTagDialog({ tag, open, onClose, onUpdate }: Props) {
   function handleSave() {
     if (!name.trim()) return;
     const updated: Tag = { ...tag, name: name.trim().toLowerCase(), color };
-    // Will wire to Supabase on Day 22
-    console.log("Updating tag:", updated);
     toast.success(`Tag updated!`);
     onUpdate(updated);
     onClose();

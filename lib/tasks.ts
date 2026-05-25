@@ -1,7 +1,3 @@
-// lib/tasks.ts
-// NOTE: Dummy data — will be replaced with Supabase queries on Day 22
-// Types stay the same, only the fetch functions change
-
 export type Tag = {
   id: string;
   name: string;
@@ -15,7 +11,7 @@ export type Task = {
   dueDate: string | null;
   createdAt: string;
   description: string | null;
-  tags: Tag[]; // ← add this
+  tags: Tag[];
 };
 
 export async function getTags(): Promise<Tag[]> {

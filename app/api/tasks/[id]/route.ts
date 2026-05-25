@@ -7,7 +7,6 @@ type Params = {
 export async function GET(_request: Request, { params }: Params) {
   const { id } = await params
 
-  // Will fetch from Supabase on Day 22
   return NextResponse.json({
     data: {
       id,
@@ -30,7 +29,6 @@ export async function PATCH(request: Request, { params }: Params) {
     )
   }
 
-  // Will update in Supabase on Day 22
   return NextResponse.json({
     data: { id, ...body },
     message: 'Task updated',
@@ -40,7 +38,6 @@ export async function PATCH(request: Request, { params }: Params) {
 export async function DELETE(_request: Request, { params }: Params) {
   const { id } = await params
 
-  // Will delete from Supabase on Day 22
   return NextResponse.json({
     message: `Task ${id} deleted`,
   })

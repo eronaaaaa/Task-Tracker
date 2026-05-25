@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  // Will connect to Supabase on Day 22
-  // For now returns dummy data to test the endpoint
   return NextResponse.json({
     data: [
       {
@@ -34,7 +32,6 @@ export async function POST(request: Request) {
     )
   }
 
-  // Will insert into Supabase on Day 22
   const newTask = {
     id: Math.random().toString(36).slice(2),
     title: body.title.trim(),

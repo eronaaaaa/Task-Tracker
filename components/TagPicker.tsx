@@ -49,7 +49,6 @@ export default function TagPicker({
         </span>
       </label>
 
-      {/* Selected tags */}
       {selectedTags.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-1">
           {selectedTags.map((tag) => (
