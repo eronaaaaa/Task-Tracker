@@ -25,7 +25,6 @@ export async function createTag(formData: FormData) {
     .single()
 
   if (error) {
-    // Handle duplicate tag name
     if (error.code === '23505') {
       return { error: 'A tag with this name already exists' }
     }
@@ -33,6 +32,7 @@ export async function createTag(formData: FormData) {
   }
 
   revalidatePath('/tags')
+  revalidatePath('/dashboard')
 
   return { data: tag }
 }

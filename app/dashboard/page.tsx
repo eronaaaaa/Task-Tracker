@@ -1,4 +1,4 @@
-import { getTasks, getTaskStats } from '@/lib/tasks'
+import { getTasks, getTaskStats } from '@/lib/data/tasks'
 import { requireUser } from '@/lib/auth/getUser'
 import PageHeader from '@/components/PageHeader'
 import StatsBar from '@/components/StatsBar'
@@ -7,7 +7,6 @@ import TaskFilter from '@/components/TaskFilter'
 import { Box } from '@mui/material'
 
 export default async function DashboardPage() {
-  // Redirects to /login if not authenticated
   const user = await requireUser()
 
   const [tasks, stats] = await Promise.all([

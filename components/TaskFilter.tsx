@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import type { Task } from "@/lib/tasks";
+import type { Task } from "@/lib/data/tasks";
 
 type Filter = "all" | "todo" | "done";
 

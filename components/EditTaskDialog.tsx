@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
+import { useState, useTransition, useEffect } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -8,55 +8,81 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { getTags, type Tag, type Task } from "@/lib/tasks";
-import { toast } from "sonner";
-import TagPicker from "./TagPicker";
+} from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
+import TagPicker from '@/components/TagPicker'
+import { updateTask } from '@/lib/actions/tasks'
+import type { Task, Tag } from '@/lib/data/tasks'
 
 type Props = {
-  task: Task;
-  open: boolean;
-  onClose: () => void;
-};
+  task: Task
+  open: boolean
+  onClose: () => void
+}
 
 export default function EditTaskDialog({ task, open, onClose }: Props) {
-  const [title, setTitle] = useState(task.title);
-  const [status, setStatus] = useState(task.status);
-  const [dueDate, setDueDate] = useState(task.dueDate ?? "");
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
-  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
-
-  function handleSave() {
-    if (!title.trim()) return;
-    // Will wire to Supabase on Day 22
-    console.log("Saving task:", { id: task.id, title, status, dueDate });
-    toast.success("Task updated!");
-    setSelectedTags([]);
-    onClose();
-  }
+  const [title, setTitle] = useState(task.title)
+  const [status, setStatus] = useState(task.status)
+  const [dueDate, setDueDate] = useState(task.due_date ?? '')
+  const [description, setDescription] = useState(task.description ?? '')
+  const [selectedTags, setSelectedTags] = useState<Tag[]>(task.tags)
+  const [availableTags, setAvailableTags] = useState<Tag[]>([])
+  const [isPending, startTransition] = useTransition()
 
   useEffect(() => {
-    getTags().then(setAvailableTags);
-  }, []);
+    if (open) {
+      fetch('/api/tags')
+        .then((r) => r.json())
+        .then((res) => setAvailableTags(res.data ?? []))
+    }
+  }, [open])
+
+  function handleSave() {
+    if (!title.trim()) return
+
+    const formData = new FormData()
+    formData.append('id', task.id)
+    formData.append('title', title)
+    formData.append('status', status)
+    formData.append('dueDate', dueDate)
+    formData.append('description', description)
+    selectedTags.forEach((tag) => formData.append('tagIds', tag.id))
+
+    startTransition(async () => {
+      const result = await updateTask(formData)
+
+      if (result?.error) {
+        toast.error(result.error)
+      } else {
+        toast.success('Task updated!')
+        onClose()
+      }
+    })
+  }
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="sm:max-w-md bg-white ring-0">
-        <DialogHeader>
-          <DialogTitle>Edit task</DialogTitle>
+      <DialogContent className="sm:max-w-md rounded-2xl border border-gray-100 shadow-sm p-0 gap-0 overflow-hidden">
+        <DialogHeader className="px-5 pt-5 pb-4 border-b border-gray-50">
+          <DialogTitle className="text-base font-semibold text-gray-900">
+            Edit task
+          </DialogTitle>
         </DialogHeader>
 
-        <div className="flex flex-col gap-4 py-2">
+        <div className="flex flex-col gap-4 px-5 py-4">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="edit-title" className="text-sm font-medium">
+            <label
+              htmlFor="edit-title"
+              className="text-xs font-semibold text-gray-400 uppercase tracking-wide"
+            >
               Title
             </label>
             <input
@@ -64,20 +90,22 @@ export default function EditTaskDialog({ task, open, onClose }: Props) {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium">Status</label>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+              Status
+            </label>
             <Select
               value={status}
-              onValueChange={(v) => setStatus(v as Task["status"])}
+              onValueChange={(v) => setStatus(v as Task['status'])}
             >
-              <SelectTrigger>
+              <SelectTrigger className="rounded-xl border-gray-100 bg-gray-50">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-white">
+              <SelectContent className="rounded-xl border-gray-100">
                 <SelectItem value="todo">To do</SelectItem>
                 <SelectItem value="done">Done</SelectItem>
               </SelectContent>
@@ -85,18 +113,43 @@ export default function EditTaskDialog({ task, open, onClose }: Props) {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="edit-due" className="text-sm font-medium">
+            <label
+              htmlFor="edit-due"
+              className="text-xs font-semibold text-gray-400 uppercase tracking-wide"
+            >
               Due date
-              <span className="text-gray-400 font-normal ml-1">(optional)</span>
+              <span className="text-gray-400 font-normal normal-case ml-1">
+                (optional)
+              </span>
             </label>
             <input
               id="edit-due"
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+              className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
             />
           </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="edit-description"
+              className="text-xs font-semibold text-gray-400 uppercase tracking-wide"
+            >
+              Description
+              <span className="text-gray-400 font-normal normal-case ml-1">
+                (optional)
+              </span>
+            </label>
+            <textarea
+              id="edit-description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+              className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors resize-none"
+            />
+          </div>
+
           <TagPicker
             availableTags={availableTags}
             selectedTags={selectedTags}
@@ -104,26 +157,28 @@ export default function EditTaskDialog({ task, open, onClose }: Props) {
           />
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="px-5 py-4 bg-gray-50/60 border-t border-gray-50 flex gap-2">
           <DialogClose asChild>
             <Button
               variant="outline"
               size="sm"
+              className="rounded-xl border-gray-200 text-gray-500"
               onClick={onClose}
-              className="rounded-xl border-gray-200 text-gray-500 hover:text-gray-700 cursor-pointer"
+              disabled={isPending}
             >
               Cancel
             </Button>
           </DialogClose>
           <Button
             size="sm"
+            className="rounded-xl"
             onClick={handleSave}
-            className="rounded-xl bg-blue-700 hover:bg-blue-800 text-white cursor-pointer"
+            disabled={isPending || !title.trim()}
           >
-            Save changes
+            {isPending ? 'Saving...' : 'Save changes'}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

@@ -1,26 +1,34 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import TagBadge from "@/components/TagBadge";
-import type { Tag } from "@/lib/tasks";
-import { toast } from "sonner";
-import EditTagDialog from "./EditTagDialog";
+import { useState, useTransition } from 'react'
+import { Button } from '@/components/ui/button'
+import TagBadge from '@/components/TagBadge'
+import EditTagDialog from '@/components/tags/EditTagDialog'
+import { deleteTag } from '@/lib/actions/tags'
+import { toast } from 'sonner'
+import type { Tag } from '@/lib/data/tags'
 
 type Props = {
-  tag: Tag;
-  onDelete: (id: string) => void;
-  onUpdate: (tag: Tag) => void;
-};
+  tag: Tag
+  onDelete: (id: string) => void
+  onUpdate: (tag: Tag) => void
+}
 
 export default function TagRow({ tag, onDelete, onUpdate }: Props) {
-  const [editOpen, setEditOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
   function handleDelete() {
-    // Will wire to Supabase on Day 22
-    console.log("Deleting tag:", tag.id);
-    toast.success(`Tag "${tag.name}" deleted`);
-    onDelete(tag.id);
+    startTransition(async () => {
+      const result = await deleteTag(tag.id)
+
+      if (result?.error) {
+        toast.error(result.error)
+      } else {
+        toast.success(`Tag "${tag.name}" deleted`)
+        onDelete(tag.id)
+      }
+    })
   }
 
   return (
@@ -40,6 +48,7 @@ export default function TagRow({ tag, onDelete, onUpdate }: Props) {
             size="sm"
             className="rounded-xl text-gray-400 hover:text-gray-600 text-xs h-7"
             onClick={() => setEditOpen(true)}
+            disabled={isPending}
           >
             Edit
           </Button>
@@ -48,8 +57,9 @@ export default function TagRow({ tag, onDelete, onUpdate }: Props) {
             size="sm"
             className="rounded-xl text-red-400 hover:text-red-600 hover:bg-red-50 text-xs h-7"
             onClick={handleDelete}
+            disabled={isPending}
           >
-            Delete
+            {isPending ? 'Deleting...' : 'Delete'}
           </Button>
         </div>
       </div>
@@ -61,5 +71,5 @@ export default function TagRow({ tag, onDelete, onUpdate }: Props) {
         onUpdate={onUpdate}
       />
     </>
-  );
+  )
 }

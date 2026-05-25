@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Card, CardContent, Chip, Typography, Box } from '@mui/material'
-import type { Task } from '@/lib/tasks'
+import type { Task } from '@/lib/data/tasks'
 
 type TaskCardProps = {
   task: Task
@@ -32,9 +32,9 @@ export default function TaskCard({ task }: TaskCardProps) {
             color={task.status === 'done' ? 'success' : 'default'}
             variant={task.status === 'done' ? 'filled' : 'outlined'}
           />
-          {task.dueDate && (
+          {task.due_date && (
             <Typography variant="caption" color="text.secondary">
-              Due {task.dueDate}
+              Due {task.due_date}
             </Typography>
           )}
         </Box>

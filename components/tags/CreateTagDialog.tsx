@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { useState } from "react";
+import { useState, useTransition } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -8,52 +8,54 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import type { Tag } from "@/lib/tasks";
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
+import { createTag } from '@/lib/actions/tags'
+import type { Tag } from '@/lib/data/tags'
 
 const PRESET_COLORS = [
-  "#6366f1",
-  "#f59e0b",
-  "#ef4444",
-  "#8b5cf6",
-  "#10b981",
-  "#3b82f6",
-  "#ec4899",
-  "#14b8a6",
-  "#f97316",
-];
+  '#6366f1', '#f59e0b', '#ef4444',
+  '#8b5cf6', '#10b981', '#3b82f6',
+  '#ec4899', '#14b8a6', '#f97316',
+]
 
 type Props = {
-  open: boolean;
-  onClose: () => void;
-  onCreate: (tag: Tag) => void;
-};
+  open: boolean
+  onClose: () => void
+  onCreate: (tag: Tag) => void
+}
 
 export default function CreateTagDialog({ open, onClose, onCreate }: Props) {
-  const [name, setName] = useState("");
-  const [color, setColor] = useState("#6366f1");
+  const [name, setName] = useState('')
+  const [color, setColor] = useState('#6366f1')
+  const [isPending, startTransition] = useTransition()
 
   function handleCreate() {
-    if (!name.trim()) return;
-    const newTag: Tag = {
-      id: Math.random().toString(36).slice(2),
-      name: name.trim().toLowerCase(),
-      color,
-    };
-    // Will wire to Supabase on Day 22
-    console.log("Creating tag:", newTag);
-    toast.success(`Tag "${newTag.name}" created!`);
-    onCreate(newTag);
-    setName("");
-    setColor("#6366f1");
-    onClose();
+    if (!name.trim()) return
+
+    const formData = new FormData()
+    formData.append('name', name)
+    formData.append('color', color)
+
+    startTransition(async () => {
+      const result = await createTag(formData)
+
+      if (result?.error) {
+        toast.error(result.error)
+      } else {
+        toast.success(`Tag "${name}" created!`)
+        onCreate(result.data as Tag)
+        setName('')
+        setColor('#6366f1')
+        onClose()
+      }
+    })
   }
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="sm:max-w-sm rounded-2xl border border-gray-100 shadow-sm p-0 gap-0 overflow-hidden bg-white ring-0">
+      <DialogContent className="sm:max-w-sm rounded-2xl border border-gray-100 shadow-sm p-0 gap-0 overflow-hidden">
         <DialogHeader className="px-5 pt-5 pb-4 border-b border-gray-50">
           <DialogTitle className="text-base font-semibold text-gray-900">
             New tag
@@ -89,7 +91,6 @@ export default function CreateTagDialog({ open, onClose, onCreate }: Props) {
                   onClick={() => setColor(c)}
                   className="w-7 h-7 rounded-full transition-transform hover:scale-110 flex items-center justify-center"
                   style={{ background: c }}
-                  aria-label={`Select color ${c}`}
                 >
                   {color === c && (
                     <span className="text-white text-xs font-bold">✓</span>
@@ -105,7 +106,7 @@ export default function CreateTagDialog({ open, onClose, onCreate }: Props) {
                   className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
                   style={{
                     background: `${color}15`,
-                    color: color,
+                    color,
                     border: `1px solid ${color}25`,
                   }}
                 >
@@ -130,10 +131,8 @@ export default function CreateTagDialog({ open, onClose, onCreate }: Props) {
               variant="outline"
               size="sm"
               className="rounded-xl border-gray-200 text-gray-500"
-              onClick={() => {
-                setName("");
-                setColor("#6366f1");
-              }}
+              onClick={() => { setName(''); setColor('#6366f1') }}
+              disabled={isPending}
             >
               Cancel
             </Button>
@@ -142,12 +141,12 @@ export default function CreateTagDialog({ open, onClose, onCreate }: Props) {
             size="sm"
             className="rounded-xl"
             onClick={handleCreate}
-            disabled={!name.trim()}
+            disabled={!name.trim() || isPending}
           >
-            Create tag
+            {isPending ? 'Creating...' : 'Create tag'}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

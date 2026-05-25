@@ -13,7 +13,7 @@ import EditTaskDialog from '@/components/EditTaskDialog'
 import DeleteTaskDialog from '@/components/DeleteTaskDialog'
 import { toggleTaskStatus } from '@/lib/actions/tasks'
 import { toast } from 'sonner'
-import type { Task } from '@/lib/tasks'
+import type { Task } from '@/lib/data/tasks'
 
 type Props = {
   task: Task

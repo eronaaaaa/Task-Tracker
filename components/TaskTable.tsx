@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import TaskActionsDropdown from "@/components/TaskActionsDropdown";
-import type { Task } from "@/lib/tasks";
+import type { Task } from "@/lib/data/tasks";
 import AddTaskDialog from "./AddTaskDialog";
 import TagBadge from "./TagBadge";
 
@@ -116,10 +116,10 @@ export default function TaskTable({ tasks, filter = "all" }: Props) {
                 </TableCell>
 
                 <TableCell className="py-3 text-gray-400 text-sm">
-                  {task.dueDate ?? <span className="text-gray-200">—</span>}
+                  {task.due_date ?? <span className="text-gray-200">—</span>}
                 </TableCell>
                 <TableCell className="py-3 text-gray-400 text-sm">
-                  {task.createdAt}
+                  {task.created_at}
                 </TableCell>
 
                 <TableCell className="py-3 pr-3">

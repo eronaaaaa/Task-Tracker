@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import EditTaskDialog from "@/components/EditTaskDialog";
 import DeleteTaskDialog from "@/components/DeleteTaskDialog";
-import type { Task } from "@/lib/tasks";
+import type { Task } from "@/lib/data/tasks";
 
 type Props = {
   task: Task;

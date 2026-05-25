@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { deleteTask } from '@/lib/actions/tasks'
 import { useRouter } from 'next/navigation'
-import type { Task } from '@/lib/tasks'
+import type { Task } from '@/lib/data/tasks'
 
 type Props = {
   task: Task

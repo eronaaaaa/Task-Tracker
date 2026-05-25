@@ -24,9 +24,11 @@ export default function AddTaskDialog() {
   const [availableTags, setAvailableTags] = useState<Tag[]>([])
   const [isPending, startTransition] = useTransition()
 
-  useEffect(() => {
-    getTags().then(setAvailableTags)
-  }, [])
+useEffect(() => {
+  fetch('/api/tags')
+    .then((r) => r.json())
+    .then((res) => setAvailableTags(res.data ?? []))
+}, [open]) // refetch when dialog opens
 
   function handleClose() {
     setOpen(false)
