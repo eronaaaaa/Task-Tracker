@@ -49,7 +49,7 @@ export default function DeleteTaskDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="sm:max-w-sm rounded-2xl border border-gray-100 shadow-sm p-0 gap-0 overflow-hidden">
+      <DialogContent className="sm:max-w-sm bg-white rounded-2xl border border-gray-100 shadow-sm p-0 gap-0 overflow-hidden">
         <DialogHeader className="px-5 pt-5 pb-4 border-b border-gray-50">
           <DialogTitle className="text-base font-semibold text-gray-900">
             Delete task
@@ -71,7 +71,7 @@ export default function DeleteTaskDialog({
             <Button
               variant="outline"
               size="sm"
-              className="rounded-xl border-gray-200 text-gray-500"
+              className="rounded-xl cursor-pointer border-gray-200 text-gray-500"
               disabled={isPending}
             >
               Cancel
@@ -79,7 +79,7 @@ export default function DeleteTaskDialog({
           </DialogClose>
           <Button
             size="sm"
-            className="rounded-xl bg-red-600 hover:bg-red-700 text-white"
+            className="rounded-xl cursor-pointer bg-red-600 hover:bg-red-700 text-white"
             onClick={handleDelete}
             disabled={isPending}
           >

@@ -31,7 +31,7 @@ export default function TaskFilter({ tasks }: Props) {
           <button
             key={value}
             onClick={() => setFilter(value)}
-            className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
+            className={`px-3 py-1.5 cursor-pointer text-sm font-medium rounded-lg transition-all ${
               filter === value
                 ? 'bg-white text-gray-900 shadow-sm'
                 : 'text-gray-400 hover:text-gray-600'

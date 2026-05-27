@@ -60,7 +60,7 @@ useEffect(() => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="rounded-xl">
+        <Button size="sm" className="rounded-xl cursor-pointer">
           + Add task
         </Button>
       </DialogTrigger>
@@ -120,7 +120,7 @@ useEffect(() => {
           <Button
             variant="outline"
             size="sm"
-            className="rounded-xl border-gray-200 text-gray-500 hover:text-gray-700"
+            className="rounded-xl cursor-pointer border-gray-200 text-gray-500 hover:text-gray-700"
             onClick={handleClose}
             disabled={isPending}
           >
@@ -128,7 +128,7 @@ useEffect(() => {
           </Button>
           <Button
             size="sm"
-            className="rounded-xl"
+            className="rounded-xl cursor-pointer"
             onClick={handleSubmit}
             disabled={isPending || !title.trim()}
           >

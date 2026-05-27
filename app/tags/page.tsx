@@ -8,7 +8,7 @@ export default async function TagsPage() {
   const tags = await getTags()
 
   return (
-    <main className="p-6 max-w-2xl">
+    <main className="p-6 max-w-full">
       <div className="mb-6">
         <PageHeader
           title="Tags"

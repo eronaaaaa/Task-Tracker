@@ -70,7 +70,7 @@ export default function EditTaskDialog({ task, open, onClose }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="sm:max-w-md rounded-2xl border border-gray-100 shadow-sm p-0 gap-0 overflow-hidden">
+      <DialogContent className="sm:max-w-md bg-white rounded-2xl border border-gray-100 shadow-sm p-0 gap-0 overflow-hidden">
         <DialogHeader className="px-5 pt-5 pb-4 border-b border-gray-50">
           <DialogTitle className="text-base font-semibold text-gray-900">
             Edit task
@@ -102,10 +102,10 @@ export default function EditTaskDialog({ task, open, onClose }: Props) {
               value={status}
               onValueChange={(v) => setStatus(v as Task['status'])}
             >
-              <SelectTrigger className="rounded-xl border-gray-100 bg-gray-50">
+              <SelectTrigger className="rounded-xl border-gray-100 bg-gray-50 cursor-pointer">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="rounded-xl border-gray-100">
+              <SelectContent className="rounded-xl bg-white border-gray-100 cursor-pointer">
                 <SelectItem value="todo">To do</SelectItem>
                 <SelectItem value="done">Done</SelectItem>
               </SelectContent>
@@ -127,7 +127,7 @@ export default function EditTaskDialog({ task, open, onClose }: Props) {
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
+              className="w-full cursor-pointer px-3 py-2 text-sm bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
             />
           </div>
 
@@ -162,7 +162,7 @@ export default function EditTaskDialog({ task, open, onClose }: Props) {
             <Button
               variant="outline"
               size="sm"
-              className="rounded-xl border-gray-200 text-gray-500"
+              className="rounded-xl border-gray-200 text-gray-500 cursor-pointer"
               onClick={onClose}
               disabled={isPending}
             >
@@ -171,7 +171,7 @@ export default function EditTaskDialog({ task, open, onClose }: Props) {
           </DialogClose>
           <Button
             size="sm"
-            className="rounded-xl"
+            className="rounded-xl cursor-pointer"
             onClick={handleSave}
             disabled={isPending || !title.trim()}
           >

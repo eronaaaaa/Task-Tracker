@@ -46,7 +46,7 @@ export default function TaskActionsDropdown({ task }: Props) {
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 w-7 p-0 rounded-lg"
+            className="h-7 w-7 p-0 rounded-lg cursor-pointer"
             disabled={isPending}
           >
             {isPending ? '...' : '···'}

@@ -62,7 +62,7 @@ export default function TagPicker({
           <Button
             variant="outline"
             size="sm"
-            className="w-fit rounded-xl border-gray-100 text-gray-400 hover:text-gray-600 text-xs bg-white"
+            className="w-fit cursor-pointer rounded-xl border-gray-100 text-gray-400 hover:text-gray-600 text-xs bg-white"
           >
             + Add tag
           </Button>
