@@ -55,7 +55,7 @@ export default function CreateTagDialog({ open, onClose, onCreate }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="sm:max-w-sm rounded-2xl border border-gray-100 shadow-sm p-0 gap-0 overflow-hidden">
+      <DialogContent className="sm:max-w-sm bg-white rounded-2xl border border-gray-100 shadow-sm p-0 gap-0 overflow-hidden">
         <DialogHeader className="px-5 pt-5 pb-4 border-b border-gray-50">
           <DialogTitle className="text-base font-semibold text-gray-900">
             New tag

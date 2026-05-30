@@ -1,29 +1,36 @@
-import { getTaskById } from '@/lib/data/tasks'
-import Link from 'next/link'
-import { Badge } from '@/components/ui/badge'
-import TaskDetailActions from '@/components/TaskDetailActions'
-import TagBadge from '@/components/TagBadge'
-import { notFound } from 'next/navigation'
-import { requireUser } from '@/lib/auth/getUser'
+import { getTaskById } from "@/lib/data/tasks";
+import { getComments } from "@/lib/data/comments";
+import { requireUser } from "@/lib/auth/getUser";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import TaskDetailActions from "@/components/TaskDetailActions";
+import TagBadge from "@/components/TagBadge";
+import CommentSection from "@/components/CommentSection";
+import { notFound } from "next/navigation";
+import { formatDate } from "@/lib/utils";
 
 type Props = {
-  params: Promise<{ id: string }>
-}
+  params: Promise<{ id: string }>;
+};
 
 export default async function TaskDetailPage({ params }: Props) {
-  await requireUser()
-  const { id } = await params
-  const task = await getTaskById(id)
+  const user = await requireUser();
+  const { id } = await params;
 
-  if (!task) notFound()
+  const [task, comments] = await Promise.all([
+    getTaskById(id),
+    getComments(id),
+  ]);
 
-      function isOverdue(dueDate: string | null, status: string) {
-  if (!dueDate || status === 'done') return false
-  return new Date(dueDate) < new Date(new Date().toDateString())
-}
+  if (!task) notFound();
+
+  function isOverdue(dueDate: string | null, status: string) {
+    if (!dueDate || status === "done") return false;
+    return new Date(dueDate) < new Date(new Date().toDateString());
+  }
 
   return (
-    <main className="p-6 max-w-3xl">
+    <main className="p-6 max-w-full">
       <Link
         href="/dashboard"
         className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-6"
@@ -40,12 +47,12 @@ export default async function TaskDetailPage({ params }: Props) {
             <Badge
               variant="outline"
               className={
-                task.status === 'done'
-                  ? 'bg-emerald-50 text-emerald-600 border-emerald-100 w-fit text-xs font-medium'
-                  : 'bg-amber-50 text-amber-600 border-amber-100 w-fit text-xs font-medium'
+                task.status === "done"
+                  ? "bg-emerald-50 text-emerald-600 border-emerald-100 w-fit text-xs font-medium"
+                  : "bg-amber-50 text-amber-600 border-amber-100 w-fit text-xs font-medium"
               }
             >
-              {task.status === 'done' ? 'Done' : 'To do'}
+              {task.status === "done" ? "Done" : "To do"}
             </Badge>
           </div>
           <TaskDetailActions task={task} />
@@ -84,55 +91,43 @@ export default async function TaskDetailPage({ params }: Props) {
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
               Due date
             </p>
-            <p className="text-sm text-gray-700">
-              {task.due_date ?? (
-                <span className="text-gray-300">Not set</span>
-              )}
-            </p>{isOverdue(task.due_date, task.status) && (
-        <span className="text-xs bg-red-50 text-red-500 border border-red-100 px-2 py-0.5 rounded-full">
-          Overdue
-        </span>
-      )}
+            {task.due_date ? (
+              <div className="flex items-center gap-2">
+                <p
+                  className={`text-sm ${
+                    isOverdue(task.due_date, task.status)
+                      ? "text-red-500 font-medium"
+                      : "text-gray-700"
+                  }`}
+                >
+                  {formatDate(task.due_date)}
+                </p>
+                {isOverdue(task.due_date, task.status) && (
+                  <span className="text-xs bg-red-50 text-red-500 border border-red-100 px-2 py-0.5 rounded-full">
+                    Overdue
+                  </span>
+                )}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-300">Not set</p>
+            )}
           </div>
           <div className="px-6 py-4">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
               Created
             </p>
             <p className="text-sm text-gray-700">
-              {new Date(task.created_at).toLocaleDateString()}
+              {formatDate(task.created_at)}
             </p>
           </div>
         </div>
 
-        <div className="px-6 py-5 border-t border-gray-50">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
-            Comments
-          </p>
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-3">
-              <span className="text-gray-300 text-lg">💬</span>
-            </div>
-            <p className="text-sm text-gray-400">No comments yet</p>
-            <p className="text-xs text-gray-300 mt-0.5">
-              Comments coming soon
-            </p>
-          </div>
-          <div className="flex gap-2 mt-2">
-            <input
-              type="text"
-              placeholder="Add a comment..."
-              disabled
-              className="flex-1 px-3 py-2 text-sm bg-gray-50 border border-gray-100 rounded-xl text-gray-400 placeholder:text-gray-300 cursor-not-allowed"
-            />
-            <button
-              disabled
-              className="px-3 py-2 text-sm bg-gray-100 text-gray-300 rounded-xl cursor-not-allowed"
-            >
-              Post
-            </button>
-          </div>
-        </div>
+        <CommentSection
+          taskId={task.id}
+          initialComments={comments}
+          currentUserId={user.id}
+        />
       </div>
     </main>
-  )
+  );
 }

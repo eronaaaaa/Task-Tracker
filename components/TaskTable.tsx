@@ -11,9 +11,10 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import TaskActionsDropdown from "@/components/TaskActionsDropdown";
-import type { Task } from '@/lib/data/tasks'
-import AddTaskDialog from '@/components/AddTaskDialog'
+import type { Task } from "@/lib/data/tasks";
+import AddTaskDialog from "@/components/AddTaskDialog";
 import TagBadge from "./TagBadge";
+import { formatDate } from "@/lib/utils";
 
 type Props = {
   tasks: Task[];
@@ -21,11 +22,10 @@ type Props = {
 };
 
 export default function TaskTable({ tasks, filter = "all" }: Props) {
-
   function isOverdue(dueDate: string | null, status: string) {
-  if (!dueDate || status === 'done') return false
-  return new Date(dueDate) < new Date(new Date().toDateString())
-}
+    if (!dueDate || status === "done") return false;
+    return new Date(dueDate) < new Date(new Date().toDateString());
+  }
   return (
     <div className="rounded-2xl border border-gray-100 bg-white overflow-hidden shadow-sm">
       <Table>
@@ -120,13 +120,38 @@ export default function TaskTable({ tasks, filter = "all" }: Props) {
                   </Badge>
                 </TableCell>
 
-                <TableCell className="py-3 text-gray-400 text-sm">
-                        {isOverdue(task.due_date, task.status) && '⚠ '}
-
-                  {task.due_date ?? <span className="text-gray-200">—</span>}
+                <TableCell className="py-3 text-sm">
+                  {task.due_date ? (
+                    <div className="flex items-center gap-1.5">
+                      {isOverdue(task.due_date, task.status) ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-500 border border-red-100">
+                          <svg
+                            className="w-3 h-3"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                            />
+                          </svg>
+                          Overdue · {formatDate(task.due_date)}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">
+                          {formatDate(task.due_date)}
+                        </span>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-gray-200">—</span>
+                  )}
                 </TableCell>
                 <TableCell className="py-3 text-gray-400 text-sm">
-                  {task.created_at}
+                  {formatDate(task.created_at)}
                 </TableCell>
 
                 <TableCell className="py-3 pr-3">

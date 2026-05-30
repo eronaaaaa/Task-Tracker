@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export default function TaskDetailLoading() {
   return (
-    <main className="p-6 max-w-3xl">
+    <main className="p-6 max-w-full">
       <Skeleton className="h-4 w-32 rounded-lg mb-6" />
 
       <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">

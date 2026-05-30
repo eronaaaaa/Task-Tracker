@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export default function TagsLoading() {
   return (
-    <main className="p-6 max-w-2xl">
+    <main className="p-6 max-w-full">
       <div className="mb-6 flex flex-col gap-2">
         <Skeleton className="h-7 w-24 rounded-xl" />
         <Skeleton className="h-4 w-48 rounded-lg" />
